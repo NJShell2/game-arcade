@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic-Tac-Toe — Neon Arcade</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .ttt-board {
+    display: grid;
+    grid-template-columns: repeat(3, 96px);
+    grid-template-rows: repeat(3, 96px);
+    gap: 10px;
+    justify-content: center;
+  }
+  .cell {
+    font-size: 52px;
+    font-weight: 800;
+    border-radius: 16px;
+    border: 1px solid var(--tile-border);
+    background: rgba(10, 10, 30, 0.9);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.14s ease;
+    line-height: 1;
+  }
+  .cell:hover:not(:disabled) { border-color: var(--cyan); box-shadow: 0 0 14px rgba(0,240,255,.35); }
+  .cell:disabled { cursor: default; }
+  .cell.x { color: var(--cyan); text-shadow: 0 0 18px rgba(0,240,255,.8); }
+  .cell.o { color: var(--magenta); text-shadow: 0 0 18px rgba(255,47,214,.8); }
+  .side-btn.active { background: rgba(0,240,255,.22); box-shadow: 0 0 16px rgba(0,240,255,.45); color: var(--cyan); border-color: var(--cyan); }
+  @media (max-width: 480px) {
+    .ttt-board { grid-template-columns: repeat(3, 76px); grid-template-rows: repeat(3, 76px); }
+    .cell { font-size: 42px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="back-link" href="../index.html">← Arcade</a>
+    <div class="logo">🕹️ NEON ARCADE</div>
+  </header>
+
+  <h1 class="game-title">❌ Tic-Tac-Toe</h1>
+  <div id="difficulty-bar"></div>
+
+  <div class="game-layout">
+    <div class="panel">
+      <div class="ttt-board" id="board"></div>
+    </div>
+    <div class="panel" style="min-width:260px; flex:1;">
+      <div class="status" id="status"></div>
+      <div class="btn-row">
+        <span style="color:var(--muted); font-size:14px;">Play as:</span>
+        <button class="btn side-btn active" id="side-x" type="button">X (first)</button>
+        <button class="btn side-btn" id="side-o" type="button">O (second)</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="new-game" type="button">New game</button>
+      </div>
+      <p style="color:var(--muted); font-size:13px; line-height:1.6;">
+        Win to climb a difficulty level; lose twice in a row and it eases off.
+        On <b style="color:var(--magenta)">Impossible</b> the computer plays perfectly — the best you can do is draw.
+      </p>
+    </div>
+  </div>
+</div>
+<script src="../js/difficulty.js"></script>
+<script src="tictactoe-logic.js"></script>
+<script src="tictactoe-ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gomoku — Neon Arcade</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .gomoku-board {
+    display: grid;
+    grid-template-columns: repeat(15, 30px);
+    grid-auto-rows: 30px;
+    gap: 3px;
+    justify-content: center;
+    padding: 14px;
+  }
+  .gcell {
+    position: relative;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.028);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.12s ease;
+  }
+  .gcell:hover:not(:disabled) { background: rgba(0,240,255,0.12); }
+  .gcell:disabled { cursor: default; }
+  .gcell::after {
+    content: "";
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.12s ease;
+  }
+  .gcell.b::after {
+    transform: scale(1);
+    background: radial-gradient(circle at 35% 30%, #6b7a99, #10131c 72%);
+    border: 1px solid rgba(140,170,220,0.4);
+    box-shadow: 0 0 6px rgba(0,0,0,0.7), 0 0 10px rgba(0,240,255,0.25);
+  }
+  .gcell.w::after {
+    transform: scale(1);
+    background: radial-gradient(circle at 35% 30%, #ffffff, #aeb9cc 72%);
+    box-shadow: 0 0 10px rgba(255,255,255,0.45);
+  }
+  /* ghost preview of your stone on hover */
+  .gomoku-board.human-b .gcell:not(.b):not(.w):not(:disabled):hover::after,
+  .gomoku-board.human-w .gcell:not(.b):not(.w):not(:disabled):hover::after {
+    transform: scale(0.7);
+    opacity: 0.5;
+  }
+  .gomoku-board.human-b .gcell:not(.b):not(.w):not(:disabled):hover::after {
+    background: radial-gradient(circle at 35% 30%, #6b7a99, #10131c 72%);
+  }
+  .gomoku-board.human-w .gcell:not(.b):not(.w):not(:disabled):hover::after {
+    background: radial-gradient(circle at 35% 30%, #ffffff, #aeb9cc 72%);
+  }
+  /* last-move marker */
+  .gcell.last::before {
+    content: "";
+    position: absolute;
+    inset: 40%;
+    border-radius: 50%;
+    background: var(--magenta);
+    box-shadow: 0 0 8px var(--magenta);
+    z-index: 1;
+  }
+  /* winning five glow */
+  .gcell.win { background: rgba(255,215,0,0.16); }
+  .gcell.win::after { box-shadow: 0 0 0 2px gold, 0 0 14px gold; }
+  .side-btn.active { background: rgba(0,240,255,.22); box-shadow: 0 0 16px rgba(0,240,255,.45); color: var(--cyan); border-color: var(--cyan); }
+  @media (max-width: 560px) {
+    .gomoku-board { grid-template-columns: repeat(15, 20px); grid-auto-rows: 20px; gap: 2px; padding: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="back-link" href="../index.html">← Arcade</a>
+    <div class="logo">🕹️ NEON ARCADE</div>
+  </header>
+
+  <h1 class="game-title">⚫ Gomoku</h1>
+  <div id="difficulty-bar"></div>
+
+  <div class="game-layout">
+    <div class="panel">
+      <div class="gomoku-board" id="board"></div>
+    </div>
+    <div class="panel" style="min-width:260px; flex:1;">
+      <div class="status" id="status"></div>
+      <div class="btn-row">
+        <span style="color:var(--muted); font-size:14px;">Play as:</span>
+        <button class="btn side-btn active" id="side-black" type="button">Black ⚫ (first)</button>
+        <button class="btn side-btn" id="side-white" type="button">White ⚪ (second)</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="new-game" type="button">New game</button>
+      </div>
+      <p style="color:var(--muted); font-size:13px; line-height:1.6;">
+        Place stones on the intersections — first to get <b>five or more in a row</b>
+        (horizontal, vertical, or diagonal) wins. Freestyle rules: no forbidden moves.
+        Black moves first. Win to climb a difficulty level; lose twice in a row and it eases off.
+      </p>
+    </div>
+  </div>
+</div>
+<script src="../js/difficulty.js"></script>
+<script src="gomoku-logic.js"></script>
+<script src="gomoku-ui.js"></script>
+</body>
+</html>
