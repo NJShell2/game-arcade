@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Arcade — Play the classics against the computer</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .how-it-works {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+  .how-card {
+    background: var(--panel);
+    border: 1px solid var(--tile-border);
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .how-card b { color: var(--text); }
+  .how-card .lvl { font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="logo">🕹️ NEON ARCADE</div>
+  </header>
+
+  <section class="hero">
+    <h1>Pick your game.</h1>
+    <p>Six fully-playable classics, right in your browser — every rule enforced, every game against an AI opponent that adapts to how you play.</p>
+  </section>
+
+  <div id="default-difficulty-bar"></div>
+
+  <section class="tiles">
+    <a class="tile" href="games/tictactoe.html">
+      <div class="tile-icon">❌</div>
+      <div class="tile-name">Tic-Tac-Toe</div>
+      <div class="tile-desc">The classic 3×3 duel. Perfect play draws — can you beat Impossible?</div>
+      <div class="tile-stats" data-stats="tictactoe"></div>
+    </a>
+    <a class="tile" href="games/connect4.html">
+      <div class="tile-icon">🔴</div>
+      <div class="tile-name">Connect 4</div>
+      <div class="tile-desc">Drop discs, connect four. The AI spots traps several moves ahead.</div>
+      <div class="tile-stats" data-stats="connect4"></div>
+    </a>
+    <a class="tile" href="games/gomoku.html">
+      <div class="tile-icon">⚫</div>
+      <div class="tile-name">Gomoku</div>
+      <div class="tile-desc">Five in a row wins on a 15×15 board. Deceptively deep.</div>
+      <div class="tile-stats" data-stats="gomoku"></div>
+    </a>
+    <a class="tile" href="games/checkers.html">
+      <div class="tile-icon">🔵</div>
+      <div class="tile-name">Checkers</div>
+      <div class="tile-desc">Full English draughts rules: forced jumps, multi-captures, kings.</div>
+      <div class="tile-stats" data-stats="checkers"></div>
+    </a>
+    <a class="tile" href="games/chess.html">
+      <div class="tile-icon">♞</div>
+      <div class="tile-name">Chess</div>
+      <div class="tile-desc">Full rules — castling, en&nbsp;passant, promotion — against a real engine.</div>
+      <div class="tile-stats" data-stats="chess"></div>
+    </a>
+    <a class="tile" href="games/monopoly.html">
+      <div class="tile-icon">🎲</div>
+      <div class="tile-name">Monopoly</div>
+      <div class="tile-desc">Buy, build, bankrupt the AI. Houses, auctions, trading, jail — the works.</div>
+      <div class="tile-stats" data-stats="monopoly"></div>
+    </a>
+  </section>
+
+  <section class="how-it-works">
+    <div class="how-card"><b>🧠 Adaptive difficulty.</b> Every game tracks its own level. Win and you get bumped up a notch; lose twice in a row and it eases off. You can override it anytime with the buttons above each game.</div>
+    <div class="how-card"><b>🎚️ Five levels.</b> <span class="lvl" style="color:var(--green)">Beginner</span> is learning the ropes, <span class="lvl" style="color:var(--magenta)">Impossible</span> plays at full strength. Each level remembers your record separately.</div>
+    <div class="how-card"><b>💾 Your progress stays here.</b> Records and difficulty live in this browser only — nothing is uploaded anywhere.</div>
+  </section>
+
+  <footer class="footer">
+    <span>Neon Arcade — static site, no backend, no tracking. Your records never leave this browser.</span>
+    <button class="link-btn" id="reset-stats">reset all records &amp; difficulty</button>
+  </footer>
+
+</div>
+
+<script src="js/difficulty.js"></script>
+<script>
+  (function () {
+    var D = window.ArcadeDifficulty;
+    D.renderBar(document.getElementById("default-difficulty-bar"), null);
+
+    var names = { tictactoe: "Tic-Tac-Toe", connect4: "Connect 4", gomoku: "Gomoku", checkers: "Checkers", chess: "Chess", monopoly: "Monopoly" };
+    document.querySelectorAll("[data-stats]").forEach(function (el) {
+      var id = el.getAttribute("data-stats");
+      var s = D.getStats(id);
+      el.innerHTML = "Record vs computer: <b>" + s.wins + "W</b> · " + s.losses + "L · " + s.draws + "D &nbsp;—&nbsp; playing <b>" + D.LEVELS[s.level] + "</b>";
+    });
+
+    document.getElementById("reset-stats").addEventListener("click", function () {
+      if (confirm("Reset all records and difficulty levels?")) {
+        D.resetAll();
+        location.reload();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
